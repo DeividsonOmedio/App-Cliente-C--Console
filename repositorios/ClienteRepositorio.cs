@@ -12,14 +12,14 @@ namespace AppClientes
         public void GravarDadosClientes()
         {
             var json = System.Text.Json.JsonSerializer.Serialize(clientes);
-            File.WriteAllText("clientes.txt", json);
+            File.WriteAllText("../dados/clientes.txt", json);
         }
 
         public void LerDadosClientes()
         {
-            if (File.Exists("clientes.txt"))
+            if (File.Exists("../dados/clientes.txt"))
             {
-                var dados = File.ReadAllText("clientes.txt");
+                var dados = File.ReadAllText("../dados/clientes.txt");
                 var clientesArquivo = System.Text.Json.JsonSerializer.Deserialize<List<Cliente>>(dados);
                 clientes.AddRange(clientesArquivo);
             }
@@ -41,6 +41,14 @@ namespace AppClientes
             }
 
             ImprimirCliente(cliente);
+            Console.Write("Deseja realmente excluir o cliente? (S/N): ");
+            var resposta = Console.ReadLine();
+            if (resposta.ToUpper() != "S")
+            {
+                Console.WriteLine("Operação cancelada! [Enter]");
+                Console.ReadKey();
+                return;
+            }
 
             clientes.Remove(cliente);
 
