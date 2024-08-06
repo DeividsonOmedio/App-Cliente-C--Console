@@ -1,27 +1,52 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
+using AppClientes.model;
 
 namespace AppClientes
 {
     public class ClienteRepositorio
     {
-        public List<Cliente> clientes = new List<Cliente>();
+        public List<Cliente> Clientes { get; private set; } = new List<Cliente>();
 
         public void GravarDadosClientes()
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(clientes);
-            File.WriteAllText("../dados/clientes.txt", json);
+            string diretorio = "dados";
+            string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
+
+            if (!Directory.Exists(diretorio))
+            {
+                Directory.CreateDirectory(diretorio);
+            }
+
+            var json = JsonSerializer.Serialize(Clientes);
+            File.WriteAllText(caminhoArquivo, json);
         }
 
         public void LerDadosClientes()
         {
-            if (File.Exists("../dados/clientes.txt"))
+            string diretorio = "dados";
+            string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
+
+            if (!Directory.Exists(diretorio))
             {
-                var dados = File.ReadAllText("../dados/clientes.txt");
-                var clientesArquivo = System.Text.Json.JsonSerializer.Deserialize<List<Cliente>>(dados);
-                clientes.AddRange(clientesArquivo);
+                Directory.CreateDirectory(diretorio);
+            }
+
+            if (File.Exists(caminhoArquivo))
+            {
+                var dados = File.ReadAllText(caminhoArquivo);
+
+                Console.WriteLine("caminhoArquivo");
+                Console.WriteLine(caminhoArquivo);
+                Console.WriteLine(dados);
+                var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
+                if (clientesArquivo != null)
+                {
+                    Clientes.AddRange(clientesArquivo);
+                }
             }
         }
 
@@ -31,28 +56,36 @@ namespace AppClientes
             Console.Write("Informe o código do cliente: ");
             var codigo = Console.ReadLine();
 
-            var cliente = clientes.FirstOrDefault(p => p.Id == int.Parse(codigo));
-
-            if (cliente == null)
+            if (int.TryParse(codigo, out int id))
             {
-                Console.WriteLine("Cliente não encontrado! [Enter]");
-                Console.ReadKey();
-                return;
-            }
+                var cliente = Clientes.FirstOrDefault(p => p.Id == id);
 
-            ImprimirCliente(cliente);
-            Console.Write("Deseja realmente excluir o cliente? (S/N): ");
-            var resposta = Console.ReadLine();
-            if (resposta.ToUpper() != "S")
+                if (cliente == null)
+                {
+                    Console.WriteLine("Cliente não encontrado! [Enter]");
+                    Console.ReadKey();
+                    return;
+                }
+
+                ImprimirCliente(cliente);
+                Console.Write("Deseja realmente excluir o cliente? (S/N): ");
+                var resposta = Console.ReadLine();
+                if (resposta?.ToUpper() != "S")
+                {
+                    Console.WriteLine("Operação cancelada! [Enter]");
+                    Console.ReadKey();
+                    return;
+                }
+
+                Clientes.Remove(cliente);
+                GravarDadosClientes();
+
+                Console.WriteLine("Cliente removido com sucesso! [Enter]");
+            }
+            else
             {
-                Console.WriteLine("Operação cancelada! [Enter]");
-                Console.ReadKey();
-                return;
+                Console.WriteLine("Código inválido! [Enter]");
             }
-
-            clientes.Remove(cliente);
-
-            Console.WriteLine("Cliente removido com sucesso! [Enter]");
 
             Console.ReadKey();
         }
@@ -63,45 +96,49 @@ namespace AppClientes
             Console.Write("Informe o código do cliente: ");
             var codigo = Console.ReadLine();
 
-            var cliente = clientes.FirstOrDefault(p => p.Id == int.Parse(codigo));
-
-            if (cliente == null)
+            if (int.TryParse(codigo, out int id))
             {
-                Console.WriteLine("Cliente não encontrado! [Enter]");
-                Console.ReadKey();
-                return;
-            }
+                var cliente = Clientes.FirstOrDefault(p => p.Id == id);
 
-            ImprimirCliente(cliente);
-            try
-            {
-                Console.Write("Nome do cliente: ");
-                var nome = Console.ReadLine();
-                Console.Write(Environment.NewLine);
+                if (cliente == null)
+                {
+                    Console.WriteLine("Cliente não encontrado! [Enter]");
+                    Console.ReadKey();
+                    return;
+                }
 
-                Console.Write("Data de nascimento: ");
-                var dataNascimento = DateOnly.Parse(Console.ReadLine());
-                Console.Write(Environment.NewLine);
-
-                Console.Write("Desconto: ");
-                var desconto = decimal.Parse(Console.ReadLine());
-                Console.Write(Environment.NewLine);
-
-                cliente.Nome = nome;
-                cliente.DataNascimento = dataNascimento;
-                cliente.Desconto = desconto;
-                cliente.CadastradoEm = DateTime.Now;
-
-
-                Console.WriteLine("Cliente Alterado com sucesso! [Enter]");
                 ImprimirCliente(cliente);
+                try
+                {
+                    Console.Write("Nome do cliente: ");
+                    var nome = Console.ReadLine();
+
+                    Console.Write("Data de nascimento: ");
+                    var dataNascimento = DateOnly.Parse(Console.ReadLine());
+
+                    Console.Write("Desconto: ");
+                    var desconto = decimal.Parse(Console.ReadLine());
+
+                    cliente.Nome = nome;
+                    cliente.DataNascimento = dataNascimento;
+                    cliente.Desconto = desconto;
+                    cliente.CadastradoEm = DateTime.Now;
+
+                    GravarDadosClientes();
+
+                    Console.WriteLine("Cliente alterado com sucesso! [Enter]");
+                    ImprimirCliente(cliente);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Erro ao editar cliente, verifique se os dados foram inseridos corretamente. ERROR: " + e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine("Erro ao cadastrar cliente, Verifique se os dados foram inseridos corretamente. ERROR: " + e.Message);
-                Console.ReadKey();
-                return;
+                Console.WriteLine("Código inválido! [Enter]");
             }
+
             Console.ReadKey();
         }
 
@@ -113,32 +150,31 @@ namespace AppClientes
             {
                 Console.Write("Nome do cliente: ");
                 var nome = Console.ReadLine();
-                Console.Write(Environment.NewLine);
 
                 Console.Write("Data de nascimento: ");
                 var dataNascimento = DateOnly.Parse(Console.ReadLine());
-                Console.Write(Environment.NewLine);
 
                 Console.Write("Desconto: ");
                 var desconto = decimal.Parse(Console.ReadLine());
-                Console.Write(Environment.NewLine);
 
-                var cliente = new Cliente();
-                cliente.Id = clientes.Count + 1;
-                cliente.Nome = nome;
-                cliente.DataNascimento = dataNascimento;
-                cliente.Desconto = desconto;
-                cliente.CadastradoEm = DateTime.Now;
-                clientes.Add(cliente);
+                var cliente = new Cliente
+                {
+                    Id = Clientes.Count + 1,
+                    Nome = nome,
+                    DataNascimento = dataNascimento,
+                    Desconto = desconto,
+                    CadastradoEm = DateTime.Now
+                };
+
+                Clientes.Add(cliente);
+                GravarDadosClientes();
 
                 Console.WriteLine("Cliente cadastrado com sucesso! [Enter]");
                 ImprimirCliente(cliente);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Erro ao cadastrar cliente, Verifique se os dados foram inseridos corretamente. ERROR: " + e.Message);
-                Console.ReadKey();
-                return;
+                Console.WriteLine("Erro ao cadastrar cliente, verifique se os dados foram inseridos corretamente. ERROR: " + e.Message);
             }
 
             Console.ReadKey();
@@ -157,7 +193,7 @@ namespace AppClientes
         public void ExibirClientes()
         {
             Console.Clear();
-            foreach (var cliente in clientes)
+            foreach (var cliente in Clientes)
             {
                 ImprimirCliente(cliente);
             }

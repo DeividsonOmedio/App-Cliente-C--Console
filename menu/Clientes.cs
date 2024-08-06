@@ -25,6 +25,7 @@ namespace AppClientes.menu
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("");
             EscolherOpcao();
         }
 

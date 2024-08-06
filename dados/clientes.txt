@@ -1,1 +1,1 @@
-[{"Id":1,"Nome":"Gaby","DataNascimento":"2013-09-04","CadastradoEm":"2024-08-03T18:39:25.6462333-03:00","Desconto":100.00},{"Id":2,"Nome":"Sofia","DataNascimento":"2015-06-09","CadastradoEm":"2024-08-03T18:40:01.7271163-03:00","Desconto":100.00},{"Id":3,"Nome":"Deividson","DataNascimento":"1990-04-04","CadastradoEm":"2024-08-03T18:52:32.6671014-03:00","Desconto":100.00}]
+[]

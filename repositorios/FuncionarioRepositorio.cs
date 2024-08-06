@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppClientes.interfaces;
 using AppClientes.model;
@@ -83,37 +84,54 @@ namespace ApClientes.repositorios
 
         public void Exibir()
         {
+            Console.Clear();
+
             foreach (var funcionario in funcionarios)
             {
                 Console.WriteLine($"Nome: {funcionario.Nome} - Usuário: {funcionario.User} - Função: {funcionario.Funcao}");
             }
+
+            Console.ReadKey();
         }
 
         public void GravarDados()
         {
-            var diretorio = "../dados";
+            string diretorio = "dados";
+            string caminhoArquivo = Path.Combine(diretorio, "funcionarios.txt");
+
             if (!Directory.Exists(diretorio))
             {
                 Directory.CreateDirectory(diretorio);
             }
 
-            var caminhoArquivo = Path.Combine(diretorio, "funcionarios.txt");
-            var json = System.Text.Json.JsonSerializer.Serialize(funcionarios);
+            var json = JsonSerializer.Serialize(funcionarios);
             File.WriteAllText(caminhoArquivo, json);
         }
 
         public void LerDados()
         {
-            if (File.Exists("../dados/funcionarios.txt"))
-            {
-                var dados = File.ReadAllText("../dados/funcionarios.txt");
-                var funcionariosArquivo = System.Text.Json.JsonSerializer.Deserialize<List<Funcionario>>(dados);
-                funcionarios.AddRange(funcionariosArquivo);
 
-                if (funcionarios.Count == 0)
+            string diretorio = "dados";
+            string caminhoArquivo = Path.Combine(diretorio, "funcionarios.txt");
+
+            if (!Directory.Exists(diretorio))
+            {
+                Directory.CreateDirectory(diretorio);
+            }
+
+            if (File.Exists(caminhoArquivo))
+            {
+                var dados = File.ReadAllText(caminhoArquivo);
+                Console.WriteLine(dados);
+                var clientesArquivo = JsonSerializer.Deserialize<List<Funcionario>>(dados);
+                if (clientesArquivo != null)
                 {
-                    funcionarios.Add(CriarFuncionarioInicial());
-                    GravarDados();
+                    funcionarios.AddRange(clientesArquivo);
+                    if (funcionarios.Count == 0)
+                    {
+                        funcionarios.Add(CriarFuncionarioInicial());
+                        GravarDados();
+                    }
                 }
             }
             else
@@ -121,12 +139,16 @@ namespace ApClientes.repositorios
                 funcionarios.Add(CriarFuncionarioInicial());
                 GravarDados();
             }
+
+
+
         }
 
         public Funcionario CriarFuncionarioInicial()
         {
             return new Funcionario
             {
+                Id = 1,
                 Nome = "Admin",
                 User = "admin",
                 Password = "admin",
