@@ -23,6 +23,7 @@ namespace AppClientes.menu
             Console.WriteLine("\t| 5 - Sair              |");
             Console.WriteLine("\t| --------------------  |\n");
 
+            Console.WriteLine(_clienteRepositorio.Clientes);
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("");

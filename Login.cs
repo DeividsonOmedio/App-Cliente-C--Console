@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApClientes.repositorios;
 
 namespace AppClientes
 {
@@ -21,9 +22,11 @@ namespace AppClientes
             Console.WriteLine("Digite sua senha:");
             string password = Console.ReadLine();
 
-            if (user == "admin" && password == "admin")
+            FuncionarioRepositorio funcionarioRepositorio = new FuncionarioRepositorio();
+            var result = funcionarioRepositorio.Logar(user, password);
+            if (result)
             {
-                Console.WriteLine("Bem vindo Admin");
+                Console.WriteLine($"Bem vindo {user}");
                 return "admin";
             }
             else

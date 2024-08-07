@@ -12,6 +12,10 @@ namespace ApClientes.repositorios
     {
         public List<Funcionario> funcionarios = new List<Funcionario>();
 
+        public FuncionarioRepositorio()
+        {
+            LerDados();
+        }
 
         public void Cadastrar()
         {
@@ -92,6 +96,22 @@ namespace ApClientes.repositorios
             }
 
             Console.ReadKey();
+        }
+
+        public bool Logar(string user, string password)
+        {
+
+            var funcionario = funcionarios.FirstOrDefault(x => x.User == user && x.Password == password);
+
+            if (funcionario == null)
+            {
+                Console.WriteLine("Usuário ou senha inválidos");
+                return false;
+            }
+
+            Console.WriteLine($"Bem-vindo {funcionario.Nome}");
+
+            return true;
         }
 
         public void GravarDados()

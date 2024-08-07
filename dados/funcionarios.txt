@@ -1,1 +1,1 @@
-[{"User":"dsa","Password":"123","Funcao":"asd","Id":0,"Nome":"dddd"}]
+[{"User":"admin","Password":"admin","Funcao":"Administrador","Id":1,"Nome":"Admin"},{"User":"dev","Password":"admin","Funcao":"admin","Id":0,"Nome":"Deividson"}]

@@ -13,40 +13,83 @@ namespace AppClientes
 
         public void GravarDadosClientes()
         {
-            string diretorio = "dados";
-            string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
-
-            if (!Directory.Exists(diretorio))
+            try
             {
-                Directory.CreateDirectory(diretorio);
-            }
+                string diretorio = "dados";
+                string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
 
-            var json = JsonSerializer.Serialize(Clientes);
-            File.WriteAllText(caminhoArquivo, json);
+                if (!Directory.Exists(diretorio))
+                {
+                    Directory.CreateDirectory(diretorio);
+                }
+
+                var json = JsonSerializer.Serialize(Clientes);
+                File.WriteAllText(caminhoArquivo, json);
+                Console.WriteLine("Dados gravados com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao gravar os dados: " + ex.Message);
+            }
         }
 
         public void LerDadosClientes()
         {
-            string diretorio = "dados";
-            string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
-
-            if (!Directory.Exists(diretorio))
+            try
             {
-                Directory.CreateDirectory(diretorio);
-            }
+                // recuperar dados do arquivo dados/clientes.txt e inserir no List<Cliente> Clientes
+                string diretorio = "dados";
+                string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
 
-            if (File.Exists(caminhoArquivo))
-            {
-                var dados = File.ReadAllText(caminhoArquivo);
-
-                Console.WriteLine("caminhoArquivo");
-                Console.WriteLine(caminhoArquivo);
-                Console.WriteLine(dados);
-                var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
-                if (clientesArquivo != null)
+                if (File.Exists(caminhoArquivo))
                 {
-                    Clientes.AddRange(clientesArquivo);
+                    var dados = File.ReadAllText(caminhoArquivo);
+                    Console.WriteLine("Dados lidos do arquivo:");
+                    Console.WriteLine(dados);
+
+                    var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
+                    if (clientesArquivo != null)
+                    {
+                        Clientes = clientesArquivo;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
+                    }
                 }
+                else
+                {
+                    Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
+                }
+
+
+                // string diretorio = "dados";
+                // string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
+
+                // if (File.Exists(caminhoArquivo))
+                // {
+                //     var dados = File.ReadAllText(caminhoArquivo);
+                //     Console.WriteLine("Dados lidos do arquivo:");
+                //     Console.WriteLine(dados);
+
+                //     var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
+                //     if (clientesArquivo != null)
+                //     {
+                //         Clientes = clientesArquivo;
+                //     }
+                //     else
+                //     {
+                //         Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
+                //     }
+                // }
+                // else
+                // {
+                //     Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
+                // }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao ler os dados: " + ex.Message);
             }
         }
 
@@ -154,6 +197,12 @@ namespace AppClientes
                 Console.Write("Data de nascimento: ");
                 var dataNascimento = DateOnly.Parse(Console.ReadLine());
 
+                Console.Write("Email: ");
+                var email = Console.ReadLine();
+
+                Console.Write("Telefone: ");
+                var telefone = Console.ReadLine();
+
                 Console.Write("Desconto: ");
                 var desconto = decimal.Parse(Console.ReadLine());
 
@@ -162,6 +211,8 @@ namespace AppClientes
                     Id = Clientes.Count + 1,
                     Nome = nome,
                     DataNascimento = dataNascimento,
+                    Email = email,
+                    Telefone = telefone,
                     Desconto = desconto,
                     CadastradoEm = DateTime.Now
                 };
@@ -184,6 +235,8 @@ namespace AppClientes
         {
             Console.WriteLine("ID.............: " + cliente.Id);
             Console.WriteLine("Nome...........: " + cliente.Nome);
+            Console.WriteLine("Email...........: " + cliente.Email);
+            Console.WriteLine("Telefone...........: " + cliente.Telefone);
             Console.WriteLine("Desconto.......: " + cliente.Desconto.ToString("0.00"));
             Console.WriteLine("Data Nascimento: " + cliente.DataNascimento);
             Console.WriteLine("Data Cadastro..: " + cliente.CadastradoEm);
@@ -192,7 +245,11 @@ namespace AppClientes
 
         public void ExibirClientes()
         {
+            LerDadosClientes();
             Console.Clear();
+            Console.WriteLine("Lista de Clientes");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Total de clientes: " + Clientes.Count);
             foreach (var cliente in Clientes)
             {
                 ImprimirCliente(cliente);

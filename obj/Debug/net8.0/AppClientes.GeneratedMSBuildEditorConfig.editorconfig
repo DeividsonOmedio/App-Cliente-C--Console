@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AppClientes
-build_property.ProjectDir = F:\PROJETOS\4UCode\AppClientes\
+build_property.ProjectDir = /home/deividson/Projetos/App-Cliente-CSharp-Console/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
