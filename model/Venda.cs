@@ -13,6 +13,7 @@ namespace AppClientes.model
         //fazer um dicionario de produtos e quantidade
         public Dictionary<Produto, int> Produtos { get; set; }
         public decimal ValorTotal { get; set; }
+        public string Status { get; set; }
 
     }
 }

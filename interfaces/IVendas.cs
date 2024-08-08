@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace AppClientes.interfaces
 {
-    public interface IFuncionario : IGenerica
+    public interface IVendas : IGenerica
     {
-
+        void VisualizarProximo();
+        void Vender();
     }
 }

@@ -30,6 +30,7 @@ namespace ApClientes.repositorios
 
             var funcionario = new Funcionario
             {
+                Id = funcionarios.Count + 1,
                 Nome = nome,
                 User = user,
                 Password = password,
@@ -83,6 +84,7 @@ namespace ApClientes.repositorios
             }
 
             funcionarios.Remove(funcionario);
+            Console.WriteLine("Funcionário removido com sucesso");
             GravarDados();
         }
 

@@ -23,15 +23,19 @@ namespace AppClientes.menu
             {
                 case "1":
                     Clientes.Menu();
+                    MenuInicial();
                     break;
                 case "2":
                     Funcionarios.Menu();
+                    MenuInicial();
                     break;
                 case "3":
-                    //  Produto.MenuProduto();
+                    Produtos.Menu();
+                    MenuInicial();
                     break;
                 case "4":
-                    // Venda.MenuVenda();
+                    Vendas.Menu();
+                    MenuInicial();
                     break;
                 case "5":
                     Console.WriteLine("Saindo...");

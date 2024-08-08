@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using AppClientes.interfaces;
 using AppClientes.model;
 
 namespace AppClientes
 {
-    public class ClienteRepositorio
+    public class ClienteRepositorio : ICliente
     {
         public List<Cliente> Clientes { get; private set; } = new List<Cliente>();
 
-        public void GravarDadosClientes()
+        public void GravarDados()
         {
             try
             {
@@ -33,7 +34,7 @@ namespace AppClientes
             }
         }
 
-        public void LerDadosClientes()
+        public void LerDados()
         {
             try
             {
@@ -62,30 +63,6 @@ namespace AppClientes
                     Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
                 }
 
-
-                // string diretorio = "dados";
-                // string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
-
-                // if (File.Exists(caminhoArquivo))
-                // {
-                //     var dados = File.ReadAllText(caminhoArquivo);
-                //     Console.WriteLine("Dados lidos do arquivo:");
-                //     Console.WriteLine(dados);
-
-                //     var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
-                //     if (clientesArquivo != null)
-                //     {
-                //         Clientes = clientesArquivo;
-                //     }
-                //     else
-                //     {
-                //         Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
-                //     }
-                // }
-                // else
-                // {
-                //     Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
-                // }
             }
             catch (Exception ex)
             {
@@ -93,7 +70,7 @@ namespace AppClientes
             }
         }
 
-        public void ExcluirCliente()
+        public void Excluir()
         {
             Console.Clear();
             Console.Write("Informe o código do cliente: ");
@@ -121,7 +98,7 @@ namespace AppClientes
                 }
 
                 Clientes.Remove(cliente);
-                GravarDadosClientes();
+                GravarDados();
 
                 Console.WriteLine("Cliente removido com sucesso! [Enter]");
             }
@@ -133,7 +110,7 @@ namespace AppClientes
             Console.ReadKey();
         }
 
-        public void EditarCliente()
+        public void Editar()
         {
             Console.Clear();
             Console.Write("Informe o código do cliente: ");
@@ -167,7 +144,7 @@ namespace AppClientes
                     cliente.Desconto = desconto;
                     cliente.CadastradoEm = DateTime.Now;
 
-                    GravarDadosClientes();
+                    GravarDados();
 
                     Console.WriteLine("Cliente alterado com sucesso! [Enter]");
                     ImprimirCliente(cliente);
@@ -185,7 +162,7 @@ namespace AppClientes
             Console.ReadKey();
         }
 
-        public void CadastrarCliente()
+        public void Cadastrar()
         {
             Console.Clear();
 
@@ -218,7 +195,7 @@ namespace AppClientes
                 };
 
                 Clientes.Add(cliente);
-                GravarDadosClientes();
+                GravarDados();
 
                 Console.WriteLine("Cliente cadastrado com sucesso! [Enter]");
                 ImprimirCliente(cliente);
@@ -243,9 +220,9 @@ namespace AppClientes
             Console.WriteLine("------------------------------------");
         }
 
-        public void ExibirClientes()
+        public void Exibir()
         {
-            LerDadosClientes();
+            LerDados();
             Console.Clear();
             Console.WriteLine("Lista de Clientes");
             Console.WriteLine("------------------------------------");
@@ -256,6 +233,11 @@ namespace AppClientes
             }
 
             Console.ReadKey();
+        }
+
+        public Cliente BuscarPorId(int id)
+        {
+            return Clientes.FirstOrDefault(p => p.Id == id);
         }
     }
 }

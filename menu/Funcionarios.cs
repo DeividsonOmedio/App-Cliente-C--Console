@@ -68,9 +68,6 @@ namespace AppClientes.menu
                     {
                         _funcionario.GravarDados();
                         Console.WriteLine("Saindo...");
-                        // colocar um atraso para sair do programa
-                        Thread.Sleep(1000);
-                        Console.WriteLine("Programa Ecerrado!");
                         break;
                     }
                 default:

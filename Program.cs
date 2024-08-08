@@ -17,7 +17,7 @@ class Program
         Thread.CurrentThread.CurrentUICulture = cultura;
         _funcionario.LerDados();
 
-        _clienteRepositorio.LerDadosClientes();
+        _clienteRepositorio.LerDados();
 
         while (true)
         {

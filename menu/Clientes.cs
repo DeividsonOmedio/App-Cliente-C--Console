@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppClientes.interfaces;
 
 namespace AppClientes.menu
 {
     public static class Clientes
     {
-        static ClienteRepositorio _clienteRepositorio = new ClienteRepositorio();
+        static readonly ICliente _clienteRepositorio = new ClienteRepositorio();
         public static void Menu()
         {
             Console.Clear();
@@ -23,7 +24,6 @@ namespace AppClientes.menu
             Console.WriteLine("\t| 5 - Sair              |");
             Console.WriteLine("\t| --------------------  |\n");
 
-            Console.WriteLine(_clienteRepositorio.Clientes);
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("");
@@ -41,36 +41,32 @@ namespace AppClientes.menu
             {
                 case 1:
                     {
-                        _clienteRepositorio.CadastrarCliente();
+                        _clienteRepositorio.Cadastrar();
                         Menu();
                         break;
                     }
                 case 2:
                     {
-                        _clienteRepositorio.ExibirClientes();
+                        _clienteRepositorio.Exibir();
                         Menu();
                         break;
                     }
                 case 3:
                     {
-                        _clienteRepositorio.EditarCliente();
+                        _clienteRepositorio.Editar();
                         Menu();
                         break;
                     }
                 case 4:
                     {
-                        _clienteRepositorio.ExcluirCliente();
+                        _clienteRepositorio.Excluir();
                         Menu();
                         break;
                     }
                 case 5:
                     {
-                        _clienteRepositorio.GravarDadosClientes();
+                        _clienteRepositorio.GravarDados();
                         Console.WriteLine("Saindo...");
-                        // colocar um atraso para sair do programa
-                        Thread.Sleep(1000);
-                        Console.WriteLine("Programa Ecerrado!");
-                        Environment.Exit(0);
                         break;
                     }
                 default:
