@@ -1,0 +1,1 @@
+[{"Email":null,"Telefone":null,"DataNascimento":"2021-11-11","CadastradoEm":"2024-08-06T21:27:03.0606347-03:00","Desconto":123,"Id":1,"Nome":"rrr"},{"Email":null,"Telefone":null,"DataNascimento":"2011-11-11","CadastradoEm":"2024-08-06T21:28:21.8334543-03:00","Desconto":111,"Id":2,"Nome":"fff"}]
