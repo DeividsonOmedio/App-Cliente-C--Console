@@ -9,9 +9,9 @@ namespace AppClientes.model
     {
         public int Id { get; set; }
         public DateTime DataVenda { get; set; }
-        public Cliente Cliente { get; set; }
+        public string Cliente { get; set; }
         //fazer um dicionario de produtos e quantidade
-        public Dictionary<Produto, int> Produtos { get; set; }
+        public Dictionary<string, int> Produtos { get; set; }
         public decimal ValorTotal { get; set; }
         public string Status { get; set; }
 

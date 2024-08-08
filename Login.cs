@@ -11,7 +11,7 @@ namespace AppClientes
         public static string Logar()
         {
         Logar:
-            Console.Clear();
+            // Console.Clear();
             Console.WriteLine("Para Sair Aperte Enter com o Campo Vazio");
 
             Console.WriteLine("Digite seu usuário:");

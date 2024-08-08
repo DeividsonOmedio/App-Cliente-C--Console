@@ -203,7 +203,13 @@ namespace AppClientes.repositorios
 
         public Produto BuscarPorNome(string nome)
         {
-            return Produtos.FirstOrDefault(x => x.Nome.ToLower() == nome.ToLower());
+            LerDados(); // Certifique-se de que os produtos são lidos antes de buscar
+            Exibir(); // Exibe os produtos para depuração
+            Console.WriteLine($"Buscando produto por nome: {nome}"); // Mensagem de depuração
+            var produto = Produtos.FirstOrDefault(x => x.Nome.Equals(nome, StringComparison.CurrentCultureIgnoreCase));
+            Console.WriteLine($"Produto encontrado: {produto.ToString()}"); // Mensagem de depuração
+            return produto;
         }
+
     }
 }

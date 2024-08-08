@@ -38,7 +38,13 @@ namespace AppClientes.menu
                     MenuInicial();
                     break;
                 case "5":
-                    Console.WriteLine("Saindo...");
+                    Console.Write("Saindo...");
+                    Thread.Sleep(400);
+                    Console.Write(".");
+                    Thread.Sleep(400);
+                    Console.Write(".");
+                    Thread.Sleep(400);
+                    Console.WriteLine("Programa Encerrado!");
                     break;
                 default:
                     Console.WriteLine("Opção inválida");

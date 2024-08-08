@@ -13,7 +13,7 @@ namespace AppClientes.menu
 
         public static void Menu()
         {
-            Console.Clear();
+            // Console.Clear();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.White;
 
