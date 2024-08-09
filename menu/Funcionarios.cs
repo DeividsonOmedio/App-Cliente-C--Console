@@ -17,14 +17,14 @@ namespace AppClientes.menu
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.White;
 
-            Console.WriteLine("\n\t| Cadastro de Funcionarios  |");
-            Console.WriteLine("\t| --------------------  |");
-            Console.WriteLine("\t| 1 - Cadastrar Funcionarios |");
-            Console.WriteLine("\t| 2 - Exibir Funcionarios   |");
-            Console.WriteLine("\t| 3 - Editar Funcionarios    |");
-            Console.WriteLine("\t| 4 - Excluir Funcionarios   |");
-            Console.WriteLine("\t| 5 - Sair              |");
-            Console.WriteLine("\t| --------------------  |\n");
+            Console.WriteLine("\n\t| Cadastro de Funcionarios     |");
+            Console.WriteLine("\t| -------------------------   |");
+            Console.WriteLine("\t| 1 - Cadastrar Funcionarios  |");
+            Console.WriteLine("\t| 2 - Exibir Funcionarios     |");
+            Console.WriteLine("\t| 3 - Editar Funcionarios     |");
+            Console.WriteLine("\t| 4 - Excluir Funcionarios    |");
+            Console.WriteLine("\t| 5 - Sair                    |");
+            Console.WriteLine("\t| --------------------------- |\n");
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
@@ -68,9 +68,6 @@ namespace AppClientes.menu
                     {
                         _funcionario.GravarDados();
                         Console.WriteLine("Saindo...");
-                        // colocar um atraso para sair do programa
-                        Thread.Sleep(1000);
-                        Console.WriteLine("Programa Ecerrado!");
                         break;
                     }
                 default:

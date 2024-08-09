@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace AppClientes.interfaces
 {
-    public interface IFuncionario : IGenerica
+    public interface ICliente : IGenerica
     {
-
+        Cliente BuscarPorId(int id);
     }
 }

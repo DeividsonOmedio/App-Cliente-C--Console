@@ -15,9 +15,6 @@ class Program
         var cultura = new CultureInfo("pt-BR");
         Thread.CurrentThread.CurrentCulture = cultura;
         Thread.CurrentThread.CurrentUICulture = cultura;
-        _funcionario.LerDados();
-
-        _clienteRepositorio.LerDadosClientes();
 
         while (true)
         {

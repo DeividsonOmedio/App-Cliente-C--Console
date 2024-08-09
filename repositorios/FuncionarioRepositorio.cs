@@ -30,6 +30,7 @@ namespace ApClientes.repositorios
 
             var funcionario = new Funcionario
             {
+                Id = funcionarios.Count + 1,
                 Nome = nome,
                 User = user,
                 Password = password,
@@ -83,6 +84,7 @@ namespace ApClientes.repositorios
             }
 
             funcionarios.Remove(funcionario);
+            Console.WriteLine("Funcionário removido com sucesso");
             GravarDados();
         }
 
@@ -92,7 +94,7 @@ namespace ApClientes.repositorios
 
             foreach (var funcionario in funcionarios)
             {
-                Console.WriteLine($"Nome: {funcionario.Nome} - Usuário: {funcionario.User} - Função: {funcionario.Funcao}");
+                Console.WriteLine($"Nome: {funcionario.Nome} - Usuário: {funcionario.User} - Função: {funcionario.Funcao} \n");
             }
 
             Console.ReadKey();
@@ -142,7 +144,6 @@ namespace ApClientes.repositorios
             if (File.Exists(caminhoArquivo))
             {
                 var dados = File.ReadAllText(caminhoArquivo);
-                Console.WriteLine(dados);
                 var clientesArquivo = JsonSerializer.Deserialize<List<Funcionario>>(dados);
                 if (clientesArquivo != null)
                 {
@@ -159,9 +160,6 @@ namespace ApClientes.repositorios
                 funcionarios.Add(CriarFuncionarioInicial());
                 GravarDados();
             }
-
-
-
         }
 
         public Funcionario CriarFuncionarioInicial()

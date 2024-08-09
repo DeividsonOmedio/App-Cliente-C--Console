@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using AppClientes.interfaces;
 using AppClientes.model;
 
 namespace AppClientes
 {
-    public class ClienteRepositorio
+    public class ClienteRepositorio : ICliente
     {
         public List<Cliente> Clientes { get; private set; } = new List<Cliente>();
 
-        public void GravarDadosClientes()
+        public void GravarDados()
         {
             try
             {
@@ -33,19 +34,16 @@ namespace AppClientes
             }
         }
 
-        public void LerDadosClientes()
+        public void LerDados()
         {
             try
             {
-                // recuperar dados do arquivo dados/clientes.txt e inserir no List<Cliente> Clientes
                 string diretorio = "dados";
                 string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
 
                 if (File.Exists(caminhoArquivo))
                 {
                     var dados = File.ReadAllText(caminhoArquivo);
-                    Console.WriteLine("Dados lidos do arquivo:");
-                    Console.WriteLine(dados);
 
                     var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
                     if (clientesArquivo != null)
@@ -54,38 +52,16 @@ namespace AppClientes
                     }
                     else
                     {
-                        Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
+                        AdicionarClientesIniciais();
+                        GravarDados();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
+                    AdicionarClientesIniciais();
+                    GravarDados();
                 }
 
-
-                // string diretorio = "dados";
-                // string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
-
-                // if (File.Exists(caminhoArquivo))
-                // {
-                //     var dados = File.ReadAllText(caminhoArquivo);
-                //     Console.WriteLine("Dados lidos do arquivo:");
-                //     Console.WriteLine(dados);
-
-                //     var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
-                //     if (clientesArquivo != null)
-                //     {
-                //         Clientes = clientesArquivo;
-                //     }
-                //     else
-                //     {
-                //         Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
-                //     }
-                // }
-                // else
-                // {
-                //     Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
-                // }
             }
             catch (Exception ex)
             {
@@ -93,7 +69,7 @@ namespace AppClientes
             }
         }
 
-        public void ExcluirCliente()
+        public void Excluir()
         {
             Console.Clear();
             Console.Write("Informe o código do cliente: ");
@@ -121,7 +97,7 @@ namespace AppClientes
                 }
 
                 Clientes.Remove(cliente);
-                GravarDadosClientes();
+                GravarDados();
 
                 Console.WriteLine("Cliente removido com sucesso! [Enter]");
             }
@@ -133,7 +109,7 @@ namespace AppClientes
             Console.ReadKey();
         }
 
-        public void EditarCliente()
+        public void Editar()
         {
             Console.Clear();
             Console.Write("Informe o código do cliente: ");
@@ -167,7 +143,7 @@ namespace AppClientes
                     cliente.Desconto = desconto;
                     cliente.CadastradoEm = DateTime.Now;
 
-                    GravarDadosClientes();
+                    GravarDados();
 
                     Console.WriteLine("Cliente alterado com sucesso! [Enter]");
                     ImprimirCliente(cliente);
@@ -185,7 +161,7 @@ namespace AppClientes
             Console.ReadKey();
         }
 
-        public void CadastrarCliente()
+        public void Cadastrar()
         {
             Console.Clear();
 
@@ -218,7 +194,7 @@ namespace AppClientes
                 };
 
                 Clientes.Add(cliente);
-                GravarDadosClientes();
+                GravarDados();
 
                 Console.WriteLine("Cliente cadastrado com sucesso! [Enter]");
                 ImprimirCliente(cliente);
@@ -235,27 +211,58 @@ namespace AppClientes
         {
             Console.WriteLine("ID.............: " + cliente.Id);
             Console.WriteLine("Nome...........: " + cliente.Nome);
-            Console.WriteLine("Email...........: " + cliente.Email);
-            Console.WriteLine("Telefone...........: " + cliente.Telefone);
+            Console.WriteLine("Email..........: " + cliente.Email);
+            Console.WriteLine("Telefone.......: " + cliente.Telefone);
             Console.WriteLine("Desconto.......: " + cliente.Desconto.ToString("0.00"));
             Console.WriteLine("Data Nascimento: " + cliente.DataNascimento);
             Console.WriteLine("Data Cadastro..: " + cliente.CadastradoEm);
             Console.WriteLine("------------------------------------");
         }
 
-        public void ExibirClientes()
+        public void Exibir()
         {
-            LerDadosClientes();
+            LerDados();
             Console.Clear();
             Console.WriteLine("Lista de Clientes");
             Console.WriteLine("------------------------------------");
-            Console.WriteLine("Total de clientes: " + Clientes.Count);
+            Console.WriteLine("Total de clientes: " + Clientes.Count + "\n");
             foreach (var cliente in Clientes)
             {
                 ImprimirCliente(cliente);
             }
 
             Console.ReadKey();
+        }
+
+        public Cliente BuscarPorId(int id)
+        {
+            LerDados();
+            return Clientes.FirstOrDefault(p => p.Id == id);
+        }
+
+        public void AdicionarClientesIniciais()
+        {
+            Clientes.Add(new Cliente
+            {
+                Id = 1,
+                Nome = "Gaby",
+                DataNascimento = new DateOnly(2013, 9, 4),
+                Email = "gaby@gmail.com",
+                Telefone = "11999999999",
+                Desconto = 0.1m,
+                CadastradoEm = DateTime.Now
+            });
+
+            Clientes.Add(new Cliente
+            {
+                Id = 2,
+                Nome = "Sofia",
+                DataNascimento = new DateOnly(2015, 6, 9),
+                Email = "sofia@hotmail.com",
+                Telefone = "11999999999",
+                Desconto = 0.1m,
+                CadastradoEm = DateTime.Now
+            });
         }
     }
 }

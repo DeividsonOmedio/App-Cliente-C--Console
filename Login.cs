@@ -20,13 +20,14 @@ namespace AppClientes
             if (string.IsNullOrEmpty(user)) return "false";
 
             Console.WriteLine("Digite sua senha:");
+            Console.ForegroundColor = ConsoleColor.Black;
             string password = Console.ReadLine();
-
+            Console.ForegroundColor = ConsoleColor.White;
             FuncionarioRepositorio funcionarioRepositorio = new FuncionarioRepositorio();
             var result = funcionarioRepositorio.Logar(user, password);
             if (result)
             {
-                Console.WriteLine($"Bem vindo {user}");
+                // Console.WriteLine($"Bem vindo {user}");
                 return "admin";
             }
             else
