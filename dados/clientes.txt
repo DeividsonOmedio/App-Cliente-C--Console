@@ -1,1 +1,1 @@
-[{"Email":null,"Telefone":null,"DataNascimento":"1990-04-04","CadastradoEm":"2024-08-07T21:48:48.4534246-03:00","Desconto":200,"Id":1,"Nome":"deividson"},{"Email":null,"Telefone":null,"DataNascimento":"2011-11-11","CadastradoEm":"2024-08-06T21:28:21.8334543-03:00","Desconto":111,"Id":2,"Nome":"fff"}]
+[{"Email":"deividson@gmail.com","Telefone":"31971642274","DataNascimento":"1990-04-04","CadastradoEm":"2024-08-09T03:48:23.9885398-03:00","Desconto":0,"Id":1,"Nome":"Deividson"}]

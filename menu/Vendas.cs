@@ -13,17 +13,24 @@ namespace AppClientes.menu
 
         public static void Menu()
         {
-            // Console.Clear();
+            Console.Clear();
+
+            Console.WriteLine("Proxima venda na Fila\n");
+            var proxima = _pedidos.VisualizarProximo();
+            if (proxima != null) Console.WriteLine(proxima.ToString());
+
+
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.White;
 
-            Console.WriteLine("\n\t| Vendas              |");
+            Console.WriteLine("\n\t| VENDAS                |");
             Console.WriteLine("\t| --------------------  |");
             Console.WriteLine("\t| 1 - Novo Pedido       |");
             Console.WriteLine("\t| 2 - Exibir Pedidos    |");
             Console.WriteLine("\t| 3 - Editar Pedidos    |");
-            Console.WriteLine("\t| 4 - Excluir Pedidos   |");
-            Console.WriteLine("\t| 5 - Sair              |");
+            Console.WriteLine("\t| 4 - Finalizar Venda   |");
+            Console.WriteLine("\t| 5 - Excluir Pedidos   |");
+            Console.WriteLine("\t| 6 - Sair              |");
             Console.WriteLine("\t| --------------------  |\n");
 
             Console.ForegroundColor = ConsoleColor.White;
@@ -60,11 +67,17 @@ namespace AppClientes.menu
                     }
                 case 4:
                     {
-                        _pedidos.Excluir();
+                        _pedidos.Vender(null);
                         Menu();
                         break;
                     }
                 case 5:
+                    {
+                        _pedidos.Excluir();
+                        Menu();
+                        break;
+                    }
+                case 6:
                     {
                         _pedidos.GravarDados();
                         Console.WriteLine("Saindo...");

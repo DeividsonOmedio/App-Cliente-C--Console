@@ -38,15 +38,12 @@ namespace AppClientes
         {
             try
             {
-                // recuperar dados do arquivo dados/clientes.txt e inserir no List<Cliente> Clientes
                 string diretorio = "dados";
                 string caminhoArquivo = Path.Combine(diretorio, "clientes.txt");
 
                 if (File.Exists(caminhoArquivo))
                 {
                     var dados = File.ReadAllText(caminhoArquivo);
-                    Console.WriteLine("Dados lidos do arquivo:");
-                    Console.WriteLine(dados);
 
                     var clientesArquivo = JsonSerializer.Deserialize<List<Cliente>>(dados);
                     if (clientesArquivo != null)
@@ -55,12 +52,14 @@ namespace AppClientes
                     }
                     else
                     {
-                        Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
+                        AdicionarClientesIniciais();
+                        GravarDados();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Arquivo de dados não encontrado. Um novo arquivo será criado.");
+                    AdicionarClientesIniciais();
+                    GravarDados();
                 }
 
             }
@@ -212,8 +211,8 @@ namespace AppClientes
         {
             Console.WriteLine("ID.............: " + cliente.Id);
             Console.WriteLine("Nome...........: " + cliente.Nome);
-            Console.WriteLine("Email...........: " + cliente.Email);
-            Console.WriteLine("Telefone...........: " + cliente.Telefone);
+            Console.WriteLine("Email..........: " + cliente.Email);
+            Console.WriteLine("Telefone.......: " + cliente.Telefone);
             Console.WriteLine("Desconto.......: " + cliente.Desconto.ToString("0.00"));
             Console.WriteLine("Data Nascimento: " + cliente.DataNascimento);
             Console.WriteLine("Data Cadastro..: " + cliente.CadastradoEm);
@@ -226,7 +225,7 @@ namespace AppClientes
             Console.Clear();
             Console.WriteLine("Lista de Clientes");
             Console.WriteLine("------------------------------------");
-            Console.WriteLine("Total de clientes: " + Clientes.Count);
+            Console.WriteLine("Total de clientes: " + Clientes.Count + "\n");
             foreach (var cliente in Clientes)
             {
                 ImprimirCliente(cliente);
@@ -237,7 +236,33 @@ namespace AppClientes
 
         public Cliente BuscarPorId(int id)
         {
+            LerDados();
             return Clientes.FirstOrDefault(p => p.Id == id);
+        }
+
+        public void AdicionarClientesIniciais()
+        {
+            Clientes.Add(new Cliente
+            {
+                Id = 1,
+                Nome = "Gaby",
+                DataNascimento = new DateOnly(2013, 9, 4),
+                Email = "gaby@gmail.com",
+                Telefone = "11999999999",
+                Desconto = 0.1m,
+                CadastradoEm = DateTime.Now
+            });
+
+            Clientes.Add(new Cliente
+            {
+                Id = 2,
+                Nome = "Sofia",
+                DataNascimento = new DateOnly(2015, 6, 9),
+                Email = "sofia@hotmail.com",
+                Telefone = "11999999999",
+                Desconto = 0.1m,
+                CadastradoEm = DateTime.Now
+            });
         }
     }
 }

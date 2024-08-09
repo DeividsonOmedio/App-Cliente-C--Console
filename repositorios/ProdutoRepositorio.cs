@@ -121,7 +121,7 @@ namespace AppClientes.repositorios
                 {
                     Console.WriteLine($" - {ingrediente}");
                 }
-                Console.WriteLine("------------------------------------");
+                Console.WriteLine("------------------------------------\n");
             }
 
             Console.ReadKey();
@@ -173,7 +173,7 @@ namespace AppClientes.repositorios
                 Produtos.Add(new Produto
                 {
                     Id = Produtos.Count + 1,
-                    Nome = "Hamburguer Clássico",
+                    Nome = "Classico",
                     Ingredientes = new List<string> { "Pão", "Carne", "Queijo", "Alface", "Tomate" },
                     Quantidade = 50,
                     Preco = 15.99m
@@ -182,7 +182,7 @@ namespace AppClientes.repositorios
                 Produtos.Add(new Produto
                 {
                     Id = Produtos.Count + 1,
-                    Nome = "Hamburguer Cheddar",
+                    Nome = "Cheddar",
                     Ingredientes = new List<string> { "Pão", "Carne", "Cheddar", "Bacon", "Cebola" },
                     Quantidade = 30,
                     Preco = 18.99m
@@ -191,7 +191,7 @@ namespace AppClientes.repositorios
                 Produtos.Add(new Produto
                 {
                     Id = Produtos.Count + 1,
-                    Nome = "Hamburguer Vegetariano",
+                    Nome = "Vegetariano",
                     Ingredientes = new List<string> { "Pão Integral", "Hamburguer de Grão de Bico", "Queijo Vegano", "Alface", "Tomate" },
                     Quantidade = 20,
                     Preco = 17.99m
@@ -203,11 +203,8 @@ namespace AppClientes.repositorios
 
         public Produto BuscarPorNome(string nome)
         {
-            LerDados(); // Certifique-se de que os produtos são lidos antes de buscar
-            Exibir(); // Exibe os produtos para depuração
-            Console.WriteLine($"Buscando produto por nome: {nome}"); // Mensagem de depuração
+            LerDados();
             var produto = Produtos.FirstOrDefault(x => x.Nome.Equals(nome, StringComparison.CurrentCultureIgnoreCase));
-            Console.WriteLine($"Produto encontrado: {produto.ToString()}"); // Mensagem de depuração
             return produto;
         }
 

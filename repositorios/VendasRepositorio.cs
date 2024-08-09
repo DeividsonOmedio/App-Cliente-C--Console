@@ -20,21 +20,35 @@ namespace AppClientes.repositorios
             LerDados();
         }
 
-        // cadastro do pedido
         public void Cadastrar()
         {
             Dictionary<string, int> produtos = new Dictionary<string, int>();
+            decimal total = 0;
             Console.WriteLine("Cadastrando Venda");
-            Console.WriteLine("Digite o id do cliente");
+        cliente:
+            Console.WriteLine("Digite o id do cliente, 0 Listar Clientes ou 9 para Cadastrar novo Cliente");
             string idCliente = Console.ReadLine();
+            if (idCliente == "9")
+            {
+                _clientes.Cadastrar();
+                goto cliente;
+            }
+            if (idCliente == "0")
+            {
+                _clientes.Exibir();
+                goto cliente;
+            }
             do
             {
             nomeProduto:
-                Console.WriteLine("Digite o nome do produto");
+                Console.WriteLine("Digite o nome do produto ou 0 Listar Produtos");
                 string novoProduto = Console.ReadLine();
+                if (novoProduto == "0")
+                {
+                    _produtos.Exibir();
+                    goto nomeProduto;
+                }
                 Produto produto = _produtos.BuscarPorNome(novoProduto);
-                Console.WriteLine(produto);
-                Console.ReadKey();
                 if (produto == null)
                 {
                     Console.WriteLine("Produto não encontrado");
@@ -44,6 +58,7 @@ namespace AppClientes.repositorios
                 Console.WriteLine("Digite a quantidade do produto");
                 int quantidade = int.Parse(Console.ReadLine());
                 produtos.Add(produto.Nome, quantidade);
+                total += produto.Preco * quantidade;
                 Console.WriteLine("Deseja adicionar mais produtos? (s/n)");
                 string resposta = Console.ReadLine();
                 if (resposta == "n")
@@ -58,16 +73,29 @@ namespace AppClientes.repositorios
                 Id = vendas.Count + 1,
                 Cliente = cliente.Nome,
                 Produtos = produtos,
-                Status = "Pendente" // Definindo status inicial
+                DataVenda = DateTime.Now,
+                ValorTotal = total,
+                Status = "Pendente"
             };
 
             vendas.Add(venda);
-            Console.WriteLine(venda.ToString());
             GravarDados();
+            Console.Clear();
+            Console.WriteLine("Venda Cadastrada com Sucesso\n");
+            Console.WriteLine(venda.ToString());
+            Console.WriteLine("\nDeseja Realizar o Pagamento? (s/n)");
+            string respostaPagamento = Console.ReadLine();
+            if (respostaPagamento == "s")
+            {
+                Vender(venda.ValorTotal);
+            }
+
         }
 
         public void Editar()
         {
+            Dictionary<string, int> produtos = new Dictionary<string, int>();
+            decimal total = 0;
             Console.WriteLine("Digite o id da venda que deseja editar");
             int id = int.Parse(Console.ReadLine());
             var venda = vendas.FirstOrDefault(x => x.Id == id);
@@ -79,7 +107,6 @@ namespace AppClientes.repositorios
             Console.WriteLine(venda.ToString());
             Console.WriteLine("Digite o id do cliente");
             string idCliente = Console.ReadLine();
-            Dictionary<string, int> produtos = new Dictionary<string, int>();
             do
             {
             nomeProduto:
@@ -95,6 +122,7 @@ namespace AppClientes.repositorios
                 Console.WriteLine("Digite a quantidade do produto");
                 int quantidade = int.Parse(Console.ReadLine());
                 produtos.Add(produto.Nome, quantidade);
+                total += produto.Preco * quantidade;
                 Console.WriteLine("Deseja adicionar mais produtos? (s/n)");
                 string resposta = Console.ReadLine();
                 if (resposta == "n")
@@ -105,6 +133,7 @@ namespace AppClientes.repositorios
             var cliente = _clientes.BuscarPorId(int.Parse(idCliente));
             venda.Cliente = cliente.Nome;
             venda.Produtos = produtos;
+            venda.ValorTotal = total;
 
             GravarDados();
         }
@@ -127,7 +156,7 @@ namespace AppClientes.repositorios
         public void Exibir()
         {
             LerDados();
-            // Console.Clear();
+            Console.Clear();
             Console.WriteLine("Vendas cadastradas");
             Console.WriteLine("------------------------------------");
             Console.WriteLine("Total de vendas: " + vendas.Count);
@@ -151,7 +180,6 @@ namespace AppClientes.repositorios
 
             var json = JsonSerializer.Serialize(vendas);
             File.WriteAllText(caminhoArquivo, json);
-            Console.WriteLine($"Dados gravados em {caminhoArquivo}: {json}"); // Mensagem de depuração
         }
 
         public void LerDados()
@@ -162,8 +190,6 @@ namespace AppClientes.repositorios
             if (File.Exists(caminhoArquivo))
             {
                 var dados = File.ReadAllText(caminhoArquivo);
-                Console.WriteLine($"Dados lidos do arquivo {caminhoArquivo}: {dados}"); // Mensagem de depuração
-
                 var vendasArquivo = JsonSerializer.Deserialize<List<Venda>>(dados);
                 if (vendasArquivo.Count < 1)
                 {
@@ -176,14 +202,12 @@ namespace AppClientes.repositorios
                 }
                 else
                 {
-                    Console.WriteLine("Não foi possível deserializar os dados do arquivo.");
                     CriarVendasIniciais();
                     GravarDados();
                 }
             }
             else
             {
-                Console.WriteLine("Arquivo não encontrado. Criando vendas iniciais.");
                 CriarVendasIniciais();
                 GravarDados();
             }
@@ -191,84 +215,104 @@ namespace AppClientes.repositorios
 
         public void CriarVendasIniciais()
         {
-            // Cria um cliente fictício para teste
-            var cliente = _clientes.BuscarPorId(1); // Assume que o cliente com ID 1 já existe
+            var cliente1 = _clientes.BuscarPorId(1);
+            var cliente2 = _clientes.BuscarPorId(2);
 
-            // Cria um dicionário de produtos fictícios para teste
-            var produto1 = _produtos.BuscarPorNome("Hamburguer Vegetariano"); // Assume que o produto "Produto A" existe
-            var produto2 = _produtos.BuscarPorNome("Hamburguer Cheddar"); // Assume que o produto "Produto B" existe
 
-            // Verifica se os produtos foram encontrados
+            var produto1 = _produtos.BuscarPorNome("Hamburguer Vegetariano");
+            var produto2 = _produtos.BuscarPorNome("Hamburguer Cheddar");
+
             if (produto1 == null || produto2 == null)
             {
                 Console.WriteLine("Produtos fictícios não encontrados. Certifique-se de que os produtos existem.");
                 return;
             }
 
-            // Cria a primeira venda com status "Pendente"
             var vendaPendente = new Venda
             {
                 Id = vendas.Count + 1,
-                Cliente = cliente.Nome,
+                Cliente = cliente1.Nome,
                 DataVenda = DateTime.Now,
+                ValorTotal = 2 * produto1.Preco,
                 Produtos = new Dictionary<string, int>
         {
-            { produto1.Nome, 2 } // Adiciona 2 unidades do produto1
+            { produto1.Nome, 2 }
         },
                 Status = "Pendente"
             };
 
-            // Cria a segunda venda com status "Finalizada"
             var vendaFinalizada = new Venda
             {
                 Id = vendas.Count + 2,
-                Cliente = cliente.Nome,
+                Cliente = cliente2.Nome,
                 DataVenda = DateTime.Now,
+                ValorTotal = 3 * produto2.Preco,
                 Produtos = new Dictionary<string, int>
         {
-            { produto2.Nome, 3 } // Adiciona 3 unidades do produto2
+            { produto2.Nome, 3 }
         },
                 Status = "Finalizada"
             };
 
-            // Adiciona as vendas à lista e grava os dados
             vendas.Add(vendaPendente);
             vendas.Add(vendaFinalizada);
             GravarDados();
-
-            Console.WriteLine("Vendas iniciais criadas com sucesso!");
         }
 
 
-        public void Vender()
+        public void Vender(decimal? valorTotal)
         {
-            Console.WriteLine("Digite o id da venda a ser concluída");
-            int id = int.Parse(Console.ReadLine());
-            var venda = vendas.FirstOrDefault(x => x.Id == id);
-
-            if (venda == null)
+            Venda vendaAtual = null;
+            if (valorTotal == null)
             {
-                Console.WriteLine("Venda não encontrada");
+                Console.WriteLine("Digite o id da venda a ser concluída");
+                int id = int.Parse(Console.ReadLine());
+                vendaAtual = vendas.FirstOrDefault(x => x.Id == id);
+
+                if (vendaAtual == null)
+                {
+                    Console.WriteLine("Venda não encontrada");
+                    return;
+                }
+            }
+
+            if (vendaAtual == null)
+            {
+                int id = vendas.Max(x => x.Id);
+                vendaAtual = vendas.FirstOrDefault(x => x.Id == id);
+                if (vendaAtual == null)
+                {
+                    Console.WriteLine("Venda não encontrada");
+                    return;
+                }
+            }
+            Console.WriteLine($"\nValor a Pagar {vendaAtual.ValorTotal}\n");
+            Console.WriteLine("Pagamento Realizado? (s/n)");
+            string resposta = Console.ReadLine();
+            if (resposta == "n")
+            {
+                Console.WriteLine("Pagamento não realizado");
                 return;
             }
 
-            venda.Status = "Vendido";
+            vendaAtual.Status = "Vendido";
             GravarDados();
 
-            Console.WriteLine($"Venda {venda.Id} concluída com sucesso!");
+            Console.WriteLine($"Venda {vendaAtual.Id} concluída com sucesso!");
         }
 
-        public void VisualizarProximo()
+
+        public Venda? VisualizarProximo()
         {
             var proximaVenda = vendas.FirstOrDefault(x => x.Status == "Pendente");
 
             if (proximaVenda == null)
             {
                 Console.WriteLine("Nenhuma venda pendente.");
-                return;
+                return null;
             }
 
-            Console.WriteLine($"Próxima venda a ser concluída:\n{proximaVenda.ToString()}");
+            return proximaVenda;
         }
     }
 }
